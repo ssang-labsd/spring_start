@@ -17,8 +17,11 @@ public class UserDaoTest {
         user.setName("박성철");
         user.setPassword("springno1");
 
-        dao.add(user);
+        dao.deleteAll();
+        assert(dao.getCount()==0);
 
+        dao.add(user);
+        assert(dao.getCount()==1);
         User user2 = dao.get(user.getId());
 
         assert(user2.getId().equals(user.getId()));
