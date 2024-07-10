@@ -47,11 +47,4 @@ public class UserDao {
         return user;
     }
 
-    private Connection connectionMaker() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/java_spring", "root", "malawidoc01"
-        );
-        return c;
-    }
 }
