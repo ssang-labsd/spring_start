@@ -16,7 +16,7 @@ public class UserDaoTest {
         SpringApplication.run(SpringStartApplication.class, args);
 
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
         UserDao dao = context.getBean("userDao",UserDao.class);
 
 
