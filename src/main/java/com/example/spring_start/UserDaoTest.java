@@ -16,14 +16,14 @@ public class UserDaoTest {
         SpringApplication.run(SpringStartApplication.class, args);
 
 
-        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml");
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
         UserDao dao = context.getBean("userDao",UserDao.class);
 
 
         User user = new User();
-        user.setId("yellowship");
-        user.setName("여포");
-        user.setPassword("complete");
+        user.setId("redship");
+        user.setName("토비");
+        user.setPassword("java");
 
         dao.add(user);
 
