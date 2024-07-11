@@ -2,9 +2,11 @@ package com.example.spring_start;
 
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
 
@@ -56,4 +58,19 @@ public class UserDaoTest {
         assert(dao.getCount()==3);
 
     }
+
+    @Test
+    public void getUserFailure() throws SQLException{
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        UserDao dao = context.getBean("userDao",UserDao.class);
+        dao.deleteAll();
+        // JUnit 5에서 바뀐 예외 기대 방식
+        // 아래와 같이 발생을 기대하는 예외 클래스를 작성
+        // 안에는 예외가 발생해야하는 메소드를 넣어주면 됨
+        Assertions.assertThrows(EmptyResultDataAccessException.class,() ->{
+            dao.get("unknown_id");
+        });
+    }
+
 }
