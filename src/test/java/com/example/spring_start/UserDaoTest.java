@@ -2,7 +2,10 @@ package com.example.spring_start;
 
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.User;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -11,11 +14,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import java.sql.SQLException;
 
 public class UserDaoTest {
+    private UserDao dao;
+
+    @BeforeEach
+    public void setUp() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        this.dao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     public void addAndGet() throws Exception {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-
-        UserDao dao = (UserDao) context.getBean("userDao",UserDao.class);
         User user1 = new User("gyumee","박성철","spring1");
         User user2 = new User("leegw700","이길원","spring2");
 
@@ -39,8 +47,6 @@ public class UserDaoTest {
 
     @Test
     public void count() throws SQLException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        UserDao dao = context.getBean("userDao",UserDao.class);
         User user1 = new User("gyumee","박성철","spring1");
         User user2 = new User("leegw700","이길원","springno2");
         User user3 = new User("bumjin","박범진","springno3");
@@ -61,9 +67,7 @@ public class UserDaoTest {
 
     @Test
     public void getUserFailure() throws SQLException{
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
-        UserDao dao = context.getBean("userDao",UserDao.class);
         dao.deleteAll();
         // JUnit 5에서 바뀐 예외 기대 방식
         // 아래와 같이 발생을 기대하는 예외 클래스를 작성
