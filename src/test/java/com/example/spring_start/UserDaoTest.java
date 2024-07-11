@@ -15,6 +15,7 @@ public class UserDaoTest {
 
         UserDao dao = (UserDao) context.getBean("userDao",UserDao.class);
         User user1 = new User("gyumee","박성철","spring1");
+        User user2 = new User("leegw700","이길원","spring2");
 
 
 
@@ -22,12 +23,16 @@ public class UserDaoTest {
         assert(dao.getCount()==0);
 
         dao.add(user1);
-        assert(dao.getCount()==1);
+        dao.add(user2);
+        assert(dao.getCount()==2);
 
-        User user2 = dao.get(user1.getId());
+        User userget1 = dao.get(user1.getId());
+        assert(userget1.getName().equals(user1.getName()));
+        assert(userget1.getPassword().equals(user1.getPassword()));
 
-        assert(user2.getId().equals(user1.getId()));
-        assert(user2.getName().equals(user1.getName()));
+        User userget2 = dao.get(user2.getId());
+        assert(userget2.getName().equals(user2.getName()));
+        assert(userget2.getPassword().equals(user2.getPassword()));
     }
 
     @Test
