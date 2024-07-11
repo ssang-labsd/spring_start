@@ -21,8 +21,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(locations="/applicationContext.xml")
-@DirtiesContext
+@ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserDaoTest {
     @Autowired
     private ApplicationContext context;
@@ -40,10 +39,6 @@ public class UserDaoTest {
         this.user2 = new User("leegw700","이길원","springno2");
         this.user3 = new User("bumjin","박범진","springno3");
 
-        DataSource datasource = new SingleConnectionDataSource(
-                "jdbc:mysql://localhost:3306/testdb","root","malawidoc01",true);
-
-        dao.setDataSource(datasource);
     }
 
     @Test
