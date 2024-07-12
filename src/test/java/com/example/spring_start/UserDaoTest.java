@@ -23,7 +23,6 @@ import java.sql.SQLException;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserDaoTest {
-    @Autowired
     UserDao dao;
 
     private User user1;
@@ -32,10 +31,14 @@ public class UserDaoTest {
 
     @BeforeEach
     public void setUp() {
-
         this.user1 = new User( "gyumee","박성철","spring1");
         this.user2 = new User("leegw700","이길원","springno2");
         this.user3 = new User("bumjin","박범진","springno3");
+
+        dao = new UserDao();
+        DataSource dataSource = new SingleConnectionDataSource(
+                "jdbc:mysql://localhost:3306/testdb","root","malawidoc01",true);
+        dao.setDataSource(dataSource);
 
     }
 
