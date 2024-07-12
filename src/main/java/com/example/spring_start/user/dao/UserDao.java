@@ -118,7 +118,7 @@ public class UserDao {
         }
     }
 
-    protected PreparedStatement makeStatement(Connection c) throws SQLException {
+    private PreparedStatement makeStatement(Connection c) throws SQLException {
         PreparedStatement ps;
         ps = c.prepareStatement("delete from users");
         return ps;
