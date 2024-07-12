@@ -24,16 +24,14 @@ import java.sql.SQLException;
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserDaoTest {
     @Autowired
-    private ApplicationContext context;
+    UserDao dao;
 
-    private UserDao dao;
     private User user1;
     private User user2;
     private User user3;
 
     @BeforeEach
     public void setUp() {
-        this.dao = this.context.getBean("userDao", UserDao.class);
 
         this.user1 = new User( "gyumee","박성철","spring1");
         this.user2 = new User("leegw700","이길원","springno2");
