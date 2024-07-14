@@ -1,6 +1,7 @@
 package com.example.spring_start.user.dao;
 
 import com.example.spring_start.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.sql.DataSource;
@@ -9,6 +10,11 @@ import java.sql.*;
 public class UserDao {
     private DataSource dataSource;
     private Connection c;
+    private JdbcContext jdbcContext;
+
+    public void setJdbcContext(JdbcContext jdbcContext){
+        this.jdbcContext = jdbcContext;
+    }
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -16,7 +22,9 @@ public class UserDao {
 
 
     public void add(final User user) throws SQLException {
-        jdbcContextWithStatementStrategy(
+        System.out.println(jdbcContext);
+
+        jdbcContext.workWithStatementStrategy(
                 new StatementStrategy() {
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException{
                 PreparedStatement ps = c.prepareStatement("insert into users(id,name,password) values(?,?,?) ");
@@ -59,7 +67,7 @@ public class UserDao {
 
     public void deleteAll() throws SQLException {
 
-        jdbcContextWithStatementStrategy(
+        jdbcContext.workWithStatementStrategy(
                 new StatementStrategy() {
                     public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                         return c.prepareStatement("delete from users");
