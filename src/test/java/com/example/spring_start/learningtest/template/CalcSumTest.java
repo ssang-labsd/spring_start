@@ -18,4 +18,9 @@ public class CalcSumTest {
     public void sumOfNumbers() throws IOException {
         assert(calculator.calcSum(this.numFilepath) == 10);
     }
+
+    @Test
+    public void multiplyOfNumbers() throws IOException {
+        assert(calculator.calcMultiply(this.numFilepath) == 24);
+    }
 }
