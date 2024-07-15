@@ -23,4 +23,9 @@ public class CalcSumTest {
     public void multiplyOfNumbers() throws IOException {
         assert(calculator.calcMultiply(this.numFilepath) == 24);
     }
+
+    @Test
+    public void concatenateStrings() throws IOException {
+        assert(calculator.concatenate(this.numFilepath).equals("1234"));
+    }
 }
