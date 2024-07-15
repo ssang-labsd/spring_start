@@ -22,9 +22,7 @@ public class UserDao {
 
 
     public void add(final User user) throws SQLException {
-        System.out.println(jdbcContext);
-
-        jdbcContext.workWithStatementStrategy(
+        this.jdbcContext.workWithStatementStrategy(
                 new StatementStrategy() {
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException{
                 PreparedStatement ps = c.prepareStatement("insert into users(id,name,password) values(?,?,?) ");
@@ -66,8 +64,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException {
-
-        jdbcContext.workWithStatementStrategy(
+        this.jdbcContext.workWithStatementStrategy(
                 new StatementStrategy() {
                     public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                         return c.prepareStatement("delete from users");
@@ -108,22 +105,5 @@ public class UserDao {
         }
     }
 
-    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException{
-        Connection c = null;
-        PreparedStatement ps = null;
-
-        try {
-            c = dataSource.getConnection();
-
-            ps = stmt.makePreparedStatement(c);
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (ps != null) {try { ps.close(); } catch (SQLException e) {} }
-            if (c != null) { try{ c.close(); } catch (SQLException e) {} }
-        }
-    }
 
 }

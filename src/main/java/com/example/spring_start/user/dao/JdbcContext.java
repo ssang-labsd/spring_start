@@ -11,6 +11,7 @@ public class JdbcContext {
     public void setDataSource(DataSource dataSource){
         this.dataSource = dataSource;
     }
+
     public void workWithStatementStrategy(StatementStrategy stmt) throws SQLException{
         Connection c = null;
         PreparedStatement ps = null;
