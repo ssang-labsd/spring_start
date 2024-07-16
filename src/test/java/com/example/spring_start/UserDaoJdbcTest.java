@@ -1,10 +1,8 @@
 package com.example.spring_start;
 
 import com.example.spring_start.user.dao.UserDao;
-import com.example.spring_start.user.dao.UserDaoJdbc;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -148,7 +146,8 @@ public class UserDaoJdbcTest {
     public void update(){
         dao.deleteAll();
 
-        dao.add(user1);
+        dao.add(user1);  // 수정할 사용자
+        dao.add(user2);  // 수정하지 않을 사용자
 
         user1.setName("오민규");
         user1.setPassword("springno6");
@@ -159,6 +158,8 @@ public class UserDaoJdbcTest {
 
         User user1update = dao.get(user1.getId());
         checkSameUser(user1,user1update);
+        User user2same = dao.get(user2.getId());
+        checkSameUser(user2, user2same);
     }
 
     private void checkSameUser(User user1, User user2) {
