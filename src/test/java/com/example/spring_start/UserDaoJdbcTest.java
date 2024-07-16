@@ -2,6 +2,7 @@ package com.example.spring_start;
 
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.dao.UserDaoJdbc;
+import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +35,9 @@ public class UserDaoJdbcTest {
 
     @BeforeEach
     public void setUp() {
-        this.user1 = new User( "gyumee","박성철","spring1");
-        this.user2 = new User("leegw700","이길원","springno2");
-        this.user3 = new User("bumjin","박범진","springno3");
+        this.user1 = new User( "gyumee","박성철","spring1", Level.BASIC,1,0);
+        this.user2 = new User("leegw700","이길원","springno2",Level.SILVER,55,10);
+        this.user3 = new User("bumjin","박범진","springno3",Level.GOLD,100,40);
     }
 
     @Test
@@ -51,12 +52,10 @@ public class UserDaoJdbcTest {
         assert(dao.getCount()==2);
 
         User userget1 = dao.get(user1.getId());
-        assert(userget1.getName().equals(user1.getName()));
-        assert(userget1.getPassword().equals(user1.getPassword()));
+        checkSameUser(userget1,user1);
 
         User userget2 = dao.get(user2.getId());
-        assert(userget2.getName().equals(user2.getName()));
-        assert(userget2.getPassword().equals(user2.getPassword()));
+        checkSameUser(userget2,user2);
     }
 
     @Test
@@ -149,6 +148,9 @@ public class UserDaoJdbcTest {
         assert(user1.getId().equals(user2.getId()));
         assert(user1.getName().equals(user2.getName()));
         assert(user1.getPassword().equals(user2.getPassword()));
+        assert(user1.getLevel().equals(user2.getLevel()));
+        assert(user1.getLogin() == user2.getLogin());
+        assert(user1.getRecommend() == user2.getRecommend());
     }
 
 
