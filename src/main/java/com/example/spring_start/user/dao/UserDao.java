@@ -1,6 +1,7 @@
 package com.example.spring_start.user.dao;
 
 import com.example.spring_start.user.domain.User;
+import com.example.spring_start.user.exception.DuplicateUserIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -21,7 +22,7 @@ public class UserDao {
     }
 
 
-    public void add(final User user) {
+    public void add(final User user) throws DuplicateUserIdException {
         this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)",
                 user.getId(), user.getName(), user.getPassword());
     }
