@@ -62,8 +62,8 @@ public class UserServiceTest {
         User userWithLevelRead = userDao.get(userWithLevel.getId());
         User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
 
-        assert(userWithLevelRead.getLevel() == userWithoutLevel.getLevel());
-        assert(userWithoutLevelRead.getLevel() == Level.BASIC);
+        assert(userWithLevelRead.getLevel().equals(userWithLevel.getLevel()));
+        assert(userWithoutLevelRead.getLevel().equals(Level.BASIC));
     }
 
 
