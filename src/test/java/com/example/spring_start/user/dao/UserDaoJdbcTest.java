@@ -1,6 +1,5 @@
-package com.example.spring_start;
+package com.example.spring_start.user.dao;
 
-import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
