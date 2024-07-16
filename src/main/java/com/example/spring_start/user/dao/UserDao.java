@@ -23,8 +23,13 @@ public class UserDao {
 
 
     public void add(final User user) throws DuplicateUserIdException {
-        this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)",
-                user.getId(), user.getName(), user.getPassword());
+        try{
+            this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)",
+                    user.getId(), user.getName(), user.getPassword());
+        } catch(DuplicateUserIdException e) {
+            throw new DuplicateUserIdException(e);
+        }
+
     }
 
     public User get(String id) {
