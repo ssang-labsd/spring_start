@@ -10,7 +10,7 @@
         <property name="password" value="malawidoc01" />
     </bean>
 
-    <bean id="userDao" class="com.example.spring_start.user.dao.UserDao" >
+    <bean id="userDaoJdbc" class="com.example.spring_start.user.dao.UserDaoJdbc" >
         <property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

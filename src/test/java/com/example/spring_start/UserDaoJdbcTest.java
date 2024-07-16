@@ -1,25 +1,26 @@
 package com.example.spring_start;
 
 import com.example.spring_start.user.dao.UserDao;
+import com.example.spring_start.user.dao.UserDaoJdbc;
 import com.example.spring_start.user.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
-public class UserDaoTest {
+public class UserDaoJdbcTest {
     @Autowired
     UserDao dao;
 
@@ -79,7 +80,7 @@ public class UserDaoTest {
         // JUnit 5에서 바뀐 예외 기대 방식
         // 아래와 같이 발생을 기대하는 예외 클래스를 작성
         // 안에는 예외가 발생해야하는 메소드를 넣어주면 됨
-        Assertions.assertThrows(EmptyResultDataAccessException.class,() ->{
+        assertThrows(EmptyResultDataAccessException.class,() ->{
             dao.get("unknown_id");
         });
     }
@@ -112,9 +113,22 @@ public class UserDaoTest {
         checkSameUser(user2, users3.get(2));
     }
 
+    @Test
+    public void duplicateKey() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        assertThrows(DataAccessException.class,()->{
+            dao.add(user1);
+        });
+
+    }
+
     private void checkSameUser(User user1, User user2) {
         assert(user1.getId().equals(user2.getId()));
         assert(user1.getName().equals(user2.getName()));
         assert(user1.getPassword().equals(user2.getPassword()));
     }
+
+
 }
