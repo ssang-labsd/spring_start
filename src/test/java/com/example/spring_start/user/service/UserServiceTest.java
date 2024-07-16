@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.example.spring_start.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
 import static com.example.spring_start.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(locations = "/test-applicationContext.xml")
@@ -69,6 +70,22 @@ public class UserServiceTest {
         assert(userWithoutLevelRead.getLevel().equals(Level.BASIC));
     }
 
+    @Test
+    public void upgradeAllOrNothing(){
+        UserService testUserService = new TestUserService(users.get(3).getId());
+        testUserService.setUserDao(this.userDao);
+        userDao.deleteAll();
+        for(User user: users) userDao.add(user);
+
+        try{
+            testUserService.upgradeLevels();
+            fail("TestUserService Exception expected");
+        }
+        catch(TestUserServiceException e){
+
+        }
+        checkLevelUpgraded(users.get(1),false);
+    }
 
     private void checkLevelUpgraded(User user, boolean upgraded){
         User userUpdate = userDao.get(user.getId());
@@ -81,7 +98,21 @@ public class UserServiceTest {
 
     }
 
-    static class UserServiceInstead extends UserService{
+    static class TestUserService extends UserService{
+        private String id;
+
+        private TestUserService(String id){
+            this.id = id;
+        }
+
+        protected void upgradeLevel(User user) {
+            if (user.getId().equals(this.id)) throw new TestUserServiceException();
+            super.upgradeLevel(user);
+        }
+
+    }
+
+    static class TestUserServiceException extends RuntimeException{
 
     }
 }
