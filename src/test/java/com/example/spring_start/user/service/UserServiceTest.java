@@ -80,4 +80,10 @@ public class UserServiceTest {
         }
 
     }
+
+    static class UserServiceInstead extends UserService{
+
+    }
 }
+
+
