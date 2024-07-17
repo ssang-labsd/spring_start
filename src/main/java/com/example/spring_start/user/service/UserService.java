@@ -3,11 +3,16 @@ package com.example.spring_start.user.service;
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.List;
 
 public class UserService {
     UserDao userDao;
+    private DataSource dataSource;
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
@@ -15,13 +20,31 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public void upgradeLevels(){
-        List<User> users = userDao.getAll();
-        for(User user : users){
-            if (canUpgradeLevel(user)) {
-                upgradeLevel(user);
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void upgradeLevels() throws Exception{
+        TransactionSynchronizationManager.initSynchronization();
+        Connection c = DataSourceUtils.getConnection(dataSource);
+        c.setAutoCommit(false);
+        try{
+            List<User> users = userDao.getAll();
+            for(User user : users){
+                if (canUpgradeLevel(user)) {
+                    upgradeLevel(user);
+                }
             }
+            c.commit();
+        } catch(Exception e){
+            c.rollback();
+            throw e;
+        } finally{
+            DataSourceUtils.releaseConnection(c, dataSource);
+            TransactionSynchronizationManager.unbindResource(this.dataSource);
+            TransactionSynchronizationManager.clearSynchronization();
         }
+
     }
 
     private boolean canUpgradeLevel(User user){
