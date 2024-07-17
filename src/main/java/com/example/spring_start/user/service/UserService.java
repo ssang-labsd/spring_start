@@ -3,16 +3,16 @@ package com.example.spring_start.user.service;
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DataSourceUtils;
+
+
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.util.List;
+import java.util.Properties;
+
+
 
 public class UserService {
     UserDao userDao;
@@ -58,10 +58,15 @@ public class UserService {
     protected void upgradeLevel(User user){
         user.upgradeLevel();
         userDao.update(user);
+        sendUpgradeEMail(user);
     }
 
     public void add(User user){
         if(user.getLevel() == null) user.setLevel(Level.BASIC);
         userDao.add(user);
+    }
+
+    private void sendUpgradeEMail(User user){
+        System.out.println(user.getName() + "님, 메일 보내기 완료!!");
     }
 }
