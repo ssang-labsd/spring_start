@@ -1,5 +1,6 @@
 package com.example.spring_start.user.dao;
 
+import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
 import com.example.spring_start.user.exception.DuplicateUserIdException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,8 +20,8 @@ public class UserDaoJdbc implements UserDao {
 
     public void add(final User user) throws DuplicateUserIdException {
         try{
-            this.jdbcTemplate.update("insert into users(id, name, password) values(?,?,?)",
-                    user.getId(), user.getName(), user.getPassword());
+            this.jdbcTemplate.update("insert into users(id, name, password,level,login,recommend) values(?,?,?,?,?,?)",
+                    user.getId(), user.getName(), user.getPassword(),user.getLevel().intValue(),user.getLogin(),user.getRecommend());
         } catch(DuplicateUserIdException e) {
             throw new DuplicateUserIdException(e);
         }
@@ -39,6 +40,13 @@ public class UserDaoJdbc implements UserDao {
         return this.jdbcTemplate.queryForObject("select count(*) from users",Integer.class);
     }
 
+    public void update(User user1) {
+        this.jdbcTemplate.update(
+                "update users set name = ?, password = ?, level = ?, login = ?, " +
+                    "recommend = ? where id = ?" , user1.getName(), user1.getPassword(), user1.getLevel().intValue(), user1.getLogin(), user1.getRecommend(), user1.getId()
+        );
+    }
+
     public List<User> getAll() {
         return this.jdbcTemplate.query("select * from users order by id", this.userMapper);
     }
@@ -50,6 +58,9 @@ public class UserDaoJdbc implements UserDao {
                  user.setId(rs.getString("id"));
                  user.setName(rs.getString("name"));
                  user.setPassword(rs.getString("password"));
+                 user.setLevel(Level.valueOf(rs.getInt("level")));
+                 user.setLogin(rs.getInt("login"));
+                 user.setRecommend(rs.getInt("recommend"));
                  return user;
                 }
             };
