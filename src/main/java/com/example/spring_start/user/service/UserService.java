@@ -1,10 +1,14 @@
 package com.example.spring_start.user.service;
 
+import com.example.spring_start.mail.MailSender;
 import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
 
 
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
@@ -19,6 +23,11 @@ public class UserService {
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
     private PlatformTransactionManager transactionManager;
+    private MailSender mailSender;
+
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void setTransactionManager(PlatformTransactionManager transactionManager) {
         this.transactionManager = transactionManager;
@@ -67,6 +76,17 @@ public class UserService {
     }
 
     private void sendUpgradeEMail(User user){
-        System.out.println(user.getName() + "님, 메일 보내기 완료!!");
+//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//        mailSender.setHost("mail.server.com");
+//
+//
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(user.getEmail());
+//        mailMessage.setFrom("useradmin@ksug.org");
+//        mailMessage.setSubject("Upgrade 안내");
+//        mailMessage.setText("사용자님의 등급이 " + user.getLevel().name());
+//
+//        this.mailSender.send(mailMessage);
+        System.out.println("Sending upgrade email to "+user.getName());
     }
 }
