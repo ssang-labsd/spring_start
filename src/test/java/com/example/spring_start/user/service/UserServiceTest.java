@@ -3,6 +3,8 @@ package com.example.spring_start.user.service;
 import com.example.spring_start.user.dao.UserDaoJdbc;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
+import com.example.spring_start.mail.MailSender;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +33,8 @@ public class UserServiceTest {
     DataSource dataSource;
     @Autowired
     PlatformTransactionManager transactionManager;
+    @Autowired
+    MailSender mailSender;
 
     @BeforeEach
     public void setUp() {
@@ -92,6 +96,7 @@ public class UserServiceTest {
 
         }
         checkLevelUpgraded(users.get(1),false);
+        testUserService.setMailSender(mailSender);
     }
 
     private void checkLevelUpgraded(User user, boolean upgraded){

@@ -6,6 +6,8 @@ public class User {
     int login;
     int recommend;
 
+    String Email;
+
     String id;
     String name;
     String password;
@@ -51,6 +53,14 @@ public class User {
 
     public void setRecommend(int recommend) {
         this.recommend = recommend;
+    }
+
+    public String getEmail(){
+        return Email;
+    }
+
+    public void setEmail(String email){
+        this.Email = email;
     }
 
     public void upgradeLevel(){
