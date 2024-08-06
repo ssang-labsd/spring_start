@@ -17,10 +17,13 @@
 
     <bean id="mailSender" class="com.example.spring_start.user.service.DummyMailSender" />
 
-
-    <bean id="userService" class="com.example.spring_start.user.service.UserService">
-        <property name="userDao" ref="userDao" />
+    <bean id="userService" class="com.example.spring_start.user.service.UserServiceTx">
         <property name="transactionManager" ref="transactionManager" />
+        <property name="userService" ref="userServiceImpl" />
+    </bean>
+
+    <bean id="userServiceImpl" class="com.example.spring_start.user.service.UserServiceImpl">
+        <property name="userDao" ref="userDao" />
         <property name="mailSender" ref="mailSender" />
     </bean>
 

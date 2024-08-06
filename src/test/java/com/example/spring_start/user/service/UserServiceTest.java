@@ -1,5 +1,6 @@
 package com.example.spring_start.user.service;
 
+import com.example.spring_start.user.dao.UserDao;
 import com.example.spring_start.user.dao.UserDaoJdbc;
 import com.example.spring_start.user.domain.Level;
 import com.example.spring_start.user.domain.User;
@@ -17,8 +18,8 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.example.spring_start.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
-import static com.example.spring_start.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static com.example.spring_start.user.service.UserServiceImpl.MIN_LOGCOUNT_FOR_SILVER;
+import static com.example.spring_start.user.service.UserServiceImpl.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(SpringExtension.class)
@@ -28,13 +29,15 @@ public class UserServiceTest {
     UserService userService;
     List<User> users; // 테스트 픽스처
     @Autowired
-    private UserDaoJdbc userDao;
+    private UserDao userDao;
     @Autowired
     DataSource dataSource;
     @Autowired
     PlatformTransactionManager transactionManager;
     @Autowired
     MailSender mailSender;
+    @Autowired
+    UserServiceImpl userServiceImpl;
 
     @BeforeEach
     public void setUp() {
@@ -84,19 +87,26 @@ public class UserServiceTest {
     public void upgradeAllOrNothing() throws Exception{
         UserService testUserService = new TestUserService(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setTransactionManager(this.transactionManager);
-        userDao.deleteAll();
-        for(User user: users) userDao.add(user);
 
+
+        UserServiceTx txUserService = new UserServiceTx();
+        txUserService.setTransactionManager(transactionManager);
+        txUserService.setUserService(testUserService);
+
+
+
+        userDao.deleteAll();
+
+        for(User user: users) userDao.add(user);
         try{
-            testUserService.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserService Exception expected");
         }
         catch(TestUserServiceException e){
 
         }
         checkLevelUpgraded(users.get(1),false);
-        testUserService.setMailSender(mailSender);
+        userServiceImpl.setMailSender(mailSender);
     }
 
     private void checkLevelUpgraded(User user, boolean upgraded){
@@ -110,7 +120,7 @@ public class UserServiceTest {
 
     }
 
-    static class TestUserService extends UserService{
+    static class TestUserService extends UserServiceImpl{
         private String id;
 
         private TestUserService(String id){
